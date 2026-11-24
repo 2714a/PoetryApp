@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 油画布背景：暖调多层渐变，模拟油画底色 + 柔光，全矢量无位图依赖 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <gradient
+                android:startColor="#F2E4C8"
+                android:centerColor="#F7EED6"
+                android:endColor="#EBDBB6"
+                android:angle="135"
+                android:type="linear" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <gradient
+                android:startColor="#26C9A24B"
+                android:centerColor="#00000000"
+                android:endColor="#1AB23A2E"
+                android:angle="45"
+                android:type="linear" />
+        </shape>
+    </item>
+</layer-list>

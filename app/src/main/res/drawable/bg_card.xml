@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 画框卡片：米白底 + 金色双描边，模拟油画装裱画框 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 外层：金色画框 -->
+    <item>
+        <shape>
+            <solid android:color="#C9A24B" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+    <!-- 内层：留出金边，米白画布 -->
+    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+        <shape>
+            <gradient
+                android:startColor="#FFFFFF"
+                android:endColor="#FBF4E4"
+                android:angle="90"
+                android:type="linear" />
+            <corners android:radius="8dp" />
+            <stroke android:width="1dp" android:color="#E6D3A8" />
+        </shape>
+    </item>
+</layer-list>

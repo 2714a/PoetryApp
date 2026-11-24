@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 启动动画页：一本书翻开，左右书页像两扇门一样向外打开，露出中心标题后进入主页面 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/splashRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_canvas"
+    android:keepScreenOn="true">
+
+    <!-- 中心露出的内容（书门打开后显现）：标题 + 副标题 -->
+    <LinearLayout
+        android:id="@+id/splashCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:alpha="0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="学 习 百 科 大 全"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.18"
+            android:textColor="@color/cinnabar" />
+
+        <View
+            android:layout_width="70dp"
+            android:layout_height="2dp"
+            android:background="@color/cinnabar"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="百科知识 · 诗词雅赏"
+            android:textSize="14sp"
+            android:textColor="@color/qingdai" />
+    </LinearLayout>
+
+    <!-- 书本容器（合上的书，随后翻开） -->
+    <FrameLayout
+        android:id="@+id/bookContainer"
+        android:layout_width="260dp"
+        android:layout_height="330dp"
+        android:layout_gravity="center"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <!-- 中缝阴影（打开时可见） -->
+        <View
+            android:id="@+id/bookSpine"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/divider"
+            android:alpha="0" />
+
+        <!-- 左内页（书门·左）：绕左边缘向外打开 -->
+        <FrameLayout
+            android:id="@+id/pageLeft"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@drawable/book_page"
+            android:elevation="2dp" />
+
+        <!-- 右内页（书门·右）：绕右边缘向外打开 -->
+        <FrameLayout
+            android:id="@+id/pageRight"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@drawable/book_page"
+            android:elevation="2dp" />
+
+        <!-- 封面左半（初始盖在上面，向左打开） -->
+        <FrameLayout
+            android:id="@+id/coverLeft"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:elevation="3dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/cinnabar" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#33000000" />
+        </FrameLayout>
+
+        <!-- 封面右半（初始盖在上面，向右打开） -->
+        <FrameLayout
+            android:id="@+id/coverRight"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:elevation="3dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/cinnabar" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#11000000" />
+        </FrameLayout>
+
+        <!-- 封面书名（合上时显示，打开时淡出） -->
+        <TextView
+            android:id="@+id/coverTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:elevation="4dp"
+            android:text="百科大全"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.2"
+            android:textColor="@color/paper" />
+    </FrameLayout>
+</FrameLayout>

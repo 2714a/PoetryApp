@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 油画顶栏：黛青到墨绿的厚重渐变，模拟油画天空 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="#33506A"
+        android:centerColor="#3B5B66"
+        android:endColor="#2E4750"
+        android:angle="135"
+        android:type="linear" />
+</shape>

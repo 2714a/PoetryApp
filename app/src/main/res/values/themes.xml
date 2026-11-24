@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Poetry" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/cinnabar</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/cinnabar_light</item>
+        <item name="colorSecondary">@color/qingdai</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSurface">@color/paper</item>
+        <item name="android:colorBackground">@color/paper</item>
+        <item name="android:statusBarColor">@color/qingdai</item>
+        <item name="android:navigationBarColor">@color/qingdai</item>
+    </style>
+
+    <!-- 启动动画页主题：全屏无状态栏，沉浸展示书翻开动画 -->
+    <style name="Theme.Poetry.Splash">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/qingdai</item>
+        <item name="android:windowBackground">@drawable/bg_canvas</item>
+    </style>
+</resources>

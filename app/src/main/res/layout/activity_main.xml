@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_canvas">
+
+    <!-- 顶部标题栏 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_topbar"
+        android:paddingTop="14dp"
+        android:paddingBottom="16dp"
+        android:paddingHorizontal="16dp"
+        android:gravity="center_vertical"
+        app:elevation="4dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+            android:id="@+id/topTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="学 习 百 科 大 全"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.12"
+            android:textColor="#F7EED6" />
+
+            <TextView
+                android:id="@+id/topSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="百科知识 · 诗词雅赏"
+                android:textSize="12sp"
+                android:textColor="#C9A24B"
+                android:layout_marginTop="3dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 首页面板（搜索 + 分类 + 每日一句 + 列表） -->
+    <LinearLayout
+        android:id="@+id/homePanel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- 搜索框 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_search"
+            android:layout_margin="12dp"
+            android:paddingHorizontal="12dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔍"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/searchInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="搜索标题 / 作者 / 词牌 / 名句"
+                android:background="@null"
+                android:padding="12dp"
+                android:textSize="14sp"
+                android:textColor="@color/ink"
+                android:textColorHint="@color/ink_faint"
+                android:imeOptions="actionSearch"
+                android:singleLine="true" />
+
+            <ImageButton
+                android:id="@+id/filterBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_sort_by_size"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="筛选" />
+
+            <ImageButton
+                android:id="@+id/searchBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_search"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="搜索" />
+        </LinearLayout>
+
+        <!-- 筛选状态条 -->
+        <TextView
+            android:id="@+id/filterStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="6dp"
+            android:textSize="12sp"
+            android:textColor="@color/cinnabar"
+            android:visibility="gone" />
+
+        <!-- 分类横滚标签 -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:paddingHorizontal="8dp">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/catGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true" />
+        </HorizontalScrollView>
+        <!-- 子目录横滚条（点大类展开/收起，未展开时隐藏） -->
+        <HorizontalScrollView
+            android:id="@+id/subScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:paddingHorizontal="8dp"
+            android:layout_marginTop="4dp"
+            android:visibility="gone">
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/subGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true" />
+        </HorizontalScrollView>
+
+        <!-- 每日一句头部（固定在列表上方） -->
+        <LinearLayout
+            android:id="@+id/dailyHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginVertical="4dp"
+            android:padding="14dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/dailyTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="每日一句"
+                android:textSize="13sp"
+                android:textColor="@color/cinnabar" />
+
+            <TextView
+                android:id="@+id/dailyQuote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                android:textColor="@color/ink"
+                android:lineSpacingExtra="5dp" />
+
+            <TextView
+                android:id="@+id/dailyFrom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"
+                android:textColor="@color/qingdai"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <!-- 列表 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipe"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="16dp"
+                    android:clipToPadding="false" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <TextView
+                android:id="@+id/loadingMore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="12sp"
+                android:textColor="@color/ink_faint"
+                android:gravity="center"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 我的面板（内嵌复用 mine_content） -->
+    <FrameLayout
+        android:id="@+id/minePanel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+
+        <include layout="@layout/mine_content" />
+    </FrameLayout>
+
+    <!-- 百科面板（动物百科列表，复用诗词列表项布局） -->
+    <FrameLayout
+        android:id="@+id/baikePanel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="百科知识"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#F7EED6"
+                android:gravity="center"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="万物有灵 · 探索自然"
+                android:textSize="12sp"
+                android:textColor="#C9A24B"
+                android:gravity="center"
+                android:paddingBottom="6dp" />
+
+            <!-- 百科类目筛选（可扩展：动物/植物/历史…） -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:paddingHorizontal="8dp">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/baikeCatGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true" />
+            </HorizontalScrollView>
+
+            <!-- 第二层：子类筛选（如 历史→秦朝/汉朝…），无子类时隐藏 -->
+            <HorizontalScrollView
+                android:id="@+id/baikeSubScroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:paddingHorizontal="8dp"
+                android:visibility="gone">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/baikeSubGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true" />
+            </HorizontalScrollView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/baikeRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:clipToPadding="false" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- 华夏王朝面板（内嵌时间轴列表） -->
+    <FrameLayout
+        android:id="@+id/dynPanel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="华夏王朝 · 五千年"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#F7EED6"
+                android:gravity="center"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="上下五千年 · 王朝演变更替"
+                android:textSize="12sp"
+                android:textColor="#C9A24B"
+                android:gravity="center"
+                android:paddingBottom="10dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dynRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:clipToPadding="false" />
+        </LinearLayout>
+    </FrameLayout>
+
+
+    <!-- 底部 Tab 栏 -->
+    <LinearLayout
+        android:id="@+id/bottomTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_topbar"
+        android:paddingTop="8dp"
+        android:paddingBottom="10dp"
+        app:elevation="8dp">
+
+        <LinearLayout
+            android:id="@+id/tabHome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:id="@+id/tabHomeIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📜"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tabHomeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="首页"
+                android:textSize="12sp"
+                android:textColor="#F7EED6" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/tabDynasty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:id="@+id/tabDynastyIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🏯"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tabDynastyLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="王朝"
+                android:textSize="12sp"
+                android:textColor="#8A9099" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabBaike"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:id="@+id/tabBaikeIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🐼"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tabBaikeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="百科"
+                android:textSize="12sp"
+                android:textColor="#8A9099" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabMine"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:id="@+id/tabMineIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="👤"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tabMineLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我的"
+                android:textSize="12sp"
+                android:textColor="#8A9099" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

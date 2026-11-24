@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 「我的」面板内容（被主界面 Tab 内嵌复用） -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 头部 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:padding="20dp"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="诗 词 歌 赋"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/cinnabar" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="中华诗词 · 油画雅赏"
+                android:textSize="13sp"
+                android:textColor="@color/qingdai"
+                android:layout_marginTop="6dp" />
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="2dp"
+                android:background="@color/cinnabar"
+                android:layout_marginTop="14dp" />
+
+            <TextView
+                android:id="@+id/mineStats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="共收藏 0 首"
+                android:textSize="14sp"
+                android:textColor="@color/ink_soft"
+                android:layout_marginTop="14dp" />
+        </LinearLayout>
+
+        <!-- 我的收藏入口 -->
+        <LinearLayout
+            android:id="@+id/mineFav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_card"
+            android:padding="16dp"
+            android:layout_marginTop="14dp"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="★ 我的收藏"
+                android:textSize="16sp"
+                android:textColor="@color/ink" />
+
+            <TextView
+                android:id="@+id/mineFavCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="14sp"
+                android:textColor="@color/ink_faint" />
+        </LinearLayout>
+
+        <!-- 操作说明 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:padding="16dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="操作说明"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/cinnabar" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="· 详情页左右滑动或上下滑动，可自动切换上一首 / 下一首\n· 列表页点击条目进入详情，点 ☆ 收藏\n· 搜索支持繁简自动兼容，可搜诗句正文"
+                android:textSize="14sp"
+                android:textColor="@color/ink_soft"
+                android:lineSpacingMultiplier="1.6"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+
+        <!-- 声明与权限 -->
+        <LinearLayout
+            android:id="@+id/mineDisclaimer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_card"
+            android:padding="16dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="声明 · 权限说明"
+                android:textSize="16sp"
+                android:textColor="@color/ink" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="›"
+                android:textSize="20sp"
+                android:textColor="@color/ink_faint" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/mineVersion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="版本 1.1.0 · 诗词数据来自开源 chinese-poetry 项目"
+            android:textSize="12sp"
+            android:textColor="@color/ink_faint"
+            android:gravity="center"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>

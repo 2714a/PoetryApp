@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@drawable/bg_canvas">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- 标题 -->
+            <TextView
+                android:id="@+id/detailTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/ink"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="12dp" />
+
+            <!-- 动物图片（仅动物类目显示） -->
+            <ImageView
+                android:id="@+id/dongwuImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:maxHeight="360dp"
+                android:scaleType="fitCenter"
+                android:contentDescription="动物图片"
+                android:layout_marginTop="8dp"
+                android:visibility="gone" />
+            <!-- 作者 -->
+            <TextView
+                android:id="@+id/detailAuthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/qingdai"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp" />
+
+            <!-- 分隔印线 -->
+            <View
+                android:layout_width="60dp"
+                android:layout_height="2dp"
+                android:background="@color/cinnabar"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp" />
+
+            <!-- 正文 -->
+            <TextView
+                android:id="@+id/detailBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textColor="@color/ink"
+                android:lineSpacingMultiplier="1.9"
+                android:gravity="center_horizontal" />
+
+            <!-- 诗词解析卡片（译文/赏析/注释） -->
+            <LinearLayout
+                android:id="@+id/analysisCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card"
+                android:padding="18dp"
+                android:layout_marginTop="28dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="诗词解析"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/cinnabar" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="2dp"
+                    android:background="@color/cinnabar_light"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:id="@+id/analysisText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/ink_soft"
+                    android:lineSpacingMultiplier="1.7" />
+            </LinearLayout>
+
+            <!-- 答案揭示卡片（歇后语/谜语/脑筋急转弯） -->
+            <LinearLayout
+                android:id="@+id/answerCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card"
+                android:padding="18dp"
+                android:layout_marginTop="28dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/revealHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="👆 点击查看答案"
+                    android:textSize="15sp"
+                    android:textColor="@color/cinnabar"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/answerText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/ink"
+                    android:gravity="center"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

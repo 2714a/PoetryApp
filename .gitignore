@@ -1,0 +1,31 @@
+# built artifacts
+*.apk
+*.aab
+*.ap_
+*.dex
+build/
+outputs/
+*.iml
+.idea/
+captures/
+.externalNativeBuild/
+.cxx/
+local.properties
+local.properties.bak
+
+# kotlin/gradle caches
+.gradle/
+.kotlin/
+buildSrc/build/
+*.log
+*.tmp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# python helper scripts (used during development only)
+__pycache__/
+*.pyc

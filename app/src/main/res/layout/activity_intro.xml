@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_canvas"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="学 习 百 科 大 全"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.2"
+            android:textColor="@color/cinnabar"
+            android:gravity="center"
+            android:layout_marginTop="24dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="百科知识 · 诗词雅赏"
+            android:textSize="14sp"
+            android:textColor="@color/qingdai"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp" />
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="2dp"
+            android:background="@color/cinnabar"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/ink"
+            android:lineSpacingMultiplier="1.7"
+            android:text="欢迎使用「学习百科大全」。\n\n这是一款离线中文百科与古典文化合集，收录中国珍稀保护动物百科（哺乳动物、鸟类、爬行两栖类、鱼类等，含形态特征、栖息分布、生活习性、保护来由等详细资料），以及全唐诗、全宋词、元曲、诗经、楚辞等九万余首古诗词，歇后语、谜语、脑筋急转弯等趣味内容，并附中国上下五千年王朝演变时间轴。\n\n主要功能：\n• 动物百科：按类别浏览珍稀动物，查看详细来由与保护现状\n• 诗词分类浏览，按朝代 / 作者筛选\n• 全文搜索，简繁体均可命中\n• 收藏喜爱作品，集中查看\n• 语音朗读诗文\n• 详情页左右滑 / 上下滑切换上下篇\n\n所有数据离线内置，运行时不请求任何危险权限，不收集个人隐私信息。" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:padding="16dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="声明与权限说明"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/cinnabar" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/ink_soft"
+                android:lineSpacingMultiplier="1.6"
+                android:layout_marginTop="8dp"
+                android:text="1. 诗词与历史数据源自公开开源古籍数据集，属公有领域古典文献，经整理校对，仅供学习欣赏参考，个别内容可能存在讹误，不作学术考据唯一依据。\n\n2. 本应用为纯离线应用，不请求定位、相机、麦克风、通讯录等危险权限；朗读功能调用系统 TTS 服务，无需额外授权。\n\n3. 数据仅存储于应用私有目录，用于缓存诗词与收藏记录，不读取或上传个人隐私信息。\n\n4. 历史叙述为高度概括，具体史实以权威史学研究为准。" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/introAgree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="我已阅读并同意以上声明与权限说明"
+            android:textSize="14sp"
+            android:textColor="@color/ink"
+            android:layout_marginTop="20dp" />
+
+        <Button
+            android:id="@+id/introEnter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="进入应用"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:background="@color/cinnabar"
+            android:enabled="false"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp" />
+    </LinearLayout>
+</ScrollView>
