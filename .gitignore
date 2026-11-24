@@ -29,3 +29,7 @@ desktop.ini
 # python helper scripts (used during development only)
 __pycache__/
 *.pyc
+
+# 签名密钥-严禁上传
+*.keystore
+*.jks
