@@ -173,7 +173,7 @@ object UpdateManager {
             .setView(view)
             .setPositiveButton("立即更新") { _, _ -> startDownload(activity, info) }
             .setNegativeButton("稍后再说", null)
-            .setCancelable(true)
+            .setCancelable(false)  // 点空白/返回键不掉，强制用户点「立即更新」或「稍后再说」
             .create()
         dialog?.show()
     }
