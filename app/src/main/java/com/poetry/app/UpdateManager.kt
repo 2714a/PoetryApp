@@ -54,7 +54,11 @@ object UpdateManager {
             try {
                 val update = fetchIfNewer(activity)
                 if (update != null) {
-                    mainHandler.post { if (!activity.isFinishing) showUpdateDialog(activity, update) }
+                    mainHandler.post {
+                        if (activity.isFinishing) return@post
+                        if (dialog?.isShowing == true || downloading) return@post  // 已有弹窗/下载中不再弹
+                        showUpdateDialog(activity, update)
+                    }
                 } else if (!silent) {
                     mainHandler.post {
                         if (activity.isFinishing) return@post
@@ -156,6 +160,7 @@ object UpdateManager {
     private var dialog: AlertDialog? = null
     private var progressBar: ProgressBar? = null
     private var progressText: TextView? = null
+    private var downloading = false  // 下载中标志，防止重复弹窗/重复下载
 
     private fun showUpdateDialog(activity: Activity, info: UpdateInfo) {
         val view = activity.layoutInflater.inflate(R.layout.dialog_update, null)
@@ -171,14 +176,27 @@ object UpdateManager {
         dialog = AlertDialog.Builder(activity)
             .setTitle("发现新版本 v" + info.version)
             .setView(view)
-            .setPositiveButton("立即更新") { _, _ -> startDownload(activity, info) }
+            // 关键：listener 传 null，阻止点按钮时弹窗自动关闭，从而能显示下载进度条
+            .setPositiveButton("立即更新", null)
             .setNegativeButton("稍后再说", null)
-            .setCancelable(false)  // 点空白/返回键不掉，强制用户点「立即更新」或「稍后再说」
+            .setCancelable(false)  // 点空白/返回键不掉，强制用户点按钮
             .create()
         dialog?.show()
+        // 覆盖按钮点击：立即更新→开始下载（不关弹窗，进度条一直可见）；稍后再说→关闭
+        dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.setOnClickListener {
+            startDownload(activity, info)
+            // 下载中禁用按钮，避免重复点击
+            it.isEnabled = false
+            (it as? android.widget.Button)?.text = "下载中..."
+        }
+        dialog?.getButton(AlertDialog.BUTTON_NEGATIVE)?.setOnClickListener {
+            dialog?.dismiss()
+        }
     }
 
     private fun startDownload(activity: Activity, info: UpdateInfo) {
+        if (downloading) return  // 已在下载，不重复开始
+        downloading = true
         val progress = progressBar ?: return
         val progressTxt = progressText ?: return
         progress.visibility = View.VISIBLE
@@ -212,11 +230,13 @@ object UpdateManager {
                         return@thread downloadFrom(activity, c2, dest, progress, progressTxt)
                     }
                     if (resp != 200) {
+                        downloading = false
                         mainHandler.post { Toast.makeText(activity, "下载失败：HTTP $resp", Toast.LENGTH_LONG).show() }
                         return@thread
                     }
                     downloadFrom(activity, conn, dest, progress, progressTxt)
                 } catch (e: Exception) {
+                    downloading = false
                     mainHandler.post {
                         Toast.makeText(activity, "下载失败：" + (e.message ?: "未知错误"), Toast.LENGTH_LONG).show()
                         progress.visibility = View.GONE
@@ -224,6 +244,7 @@ object UpdateManager {
                     }
                 }
             } catch (e: Exception) {
+                downloading = false
                 mainHandler.post {
                     Toast.makeText(activity, "下载失败：" + (e.message ?: "未知错误"), Toast.LENGTH_LONG).show()
                     progress.visibility = View.GONE
@@ -243,6 +264,7 @@ object UpdateManager {
     ) {
         try {
             if (conn.responseCode != 200) {
+                downloading = false
                 mainHandler.post { Toast.makeText(activity, "下载失败：HTTP " + conn.responseCode, Toast.LENGTH_LONG).show() }
                 return
             }
@@ -276,7 +298,9 @@ object UpdateManager {
                 progressTxt.text = "下载完成，正在打开安装..."
                 installApk(activity, dest)
             }
+            downloading = false
         } catch (e: Exception) {
+            downloading = false
             mainHandler.post {
                 Toast.makeText(activity, "下载失败：" + (e.message ?: "未知错误"), Toast.LENGTH_LONG).show()
                 progress.visibility = View.GONE
