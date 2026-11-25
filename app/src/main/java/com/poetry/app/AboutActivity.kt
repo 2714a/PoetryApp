@@ -17,6 +17,10 @@ class AboutActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.aboutTitle).text = "诗词歌赋"
         findViewById<TextView>(R.id.aboutBody).text = ABOUT_TEXT
+        // 检查更新（手动，非静默）
+        findViewById<android.widget.Button>(R.id.btnCheckUpdate).setOnClickListener {
+            UpdateManager.checkAndPrompt(this, silent = false)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

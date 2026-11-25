@@ -56,6 +56,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        // 启动后延迟静默检查更新（有新版才弹窗，不打扰正常使用）
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            if (!isFinishing && !isDestroyed) UpdateManager.checkAndPrompt(this, silent = true)
+        }, 1200L)
 
         recycler = findViewById(R.id.recycler)
         swipe = findViewById(R.id.swipe)
