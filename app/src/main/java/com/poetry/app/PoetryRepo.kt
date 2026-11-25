@@ -21,7 +21,8 @@ object PoetryRepo {
     val HOME_ROOTS: List<Pair<String, List<String>>> = listOf(
         "古诗词" to listOf("唐诗", "宋词", "元曲", "诗经", "楚辞", "曹操", "纳兰性德"),
         "趣味" to listOf("歇后语", "谜语", "脑筋急转弯"),
-        "众生之来历" to listOf("辣椒的来历", "番茄的来历", "土豆的来历", "红薯的来历")
+        "众生之来历" to listOf("辣椒的来历", "番茄的来历", "土豆的来历", "红薯的来历"),
+        "民间小故事" to listOf("长犄角的国王")
     )
     /** 大类下所有子类对应的 datasets 键（= 子类名本身） */
     fun homeChildren(root: String): List<String> =
@@ -41,7 +42,8 @@ object PoetryRepo {
         "辣椒的来历" to "lajiao",
         "番茄的来历" to "fanqie",
         "土豆的来历" to "tudou",
-        "红薯的来历" to "hongshu"
+        "红薯的来历" to "hongshu",
+        "长犄角的国王" to "gushi"
     )
 
     /** 百科类目（底部 Tab 专用，不进入首页顶部分类标签）。

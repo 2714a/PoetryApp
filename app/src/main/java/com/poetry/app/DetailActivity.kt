@@ -134,7 +134,8 @@ class DetailActivity : AppCompatActivity() {
             }
         } else {
             authorView.text = authorLine
-            bodyView.text = p.body
+            // 正文中的「」是段落分隔符（单行存储），渲染时还原为换行缩进
+            bodyView.text = if (p.body.contains("「")) p.body.replace("「", "\n\n") else p.body
             if (p.hasAnalysis) {
                 analysisCard.visibility = View.VISIBLE
                 analysisText.text = p.analysis
