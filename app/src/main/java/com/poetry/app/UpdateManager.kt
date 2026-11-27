@@ -204,57 +204,57 @@ object UpdateManager {
         progressTxt.text = "准备下载..."
 
         thread {
-            try {
-                val dir = File(activity.cacheDir, UPDATE_DIR)
-                dir.mkdirs()
-                val dest = File(dir, "update.apk")
-                if (dest.exists()) dest.delete()
-
-                val conn = (URL(info.apkUrl).openConnection() as HttpURLConnection).apply {
-                    connectTimeout = 15000
-                    readTimeout = 30000
-                    setRequestProperty("User-Agent", "PoetryApp-Updater")
-                    instanceFollowRedirects = true
-                }
+            val dir = File(activity.cacheDir, UPDATE_DIR)
+            dir.mkdirs()
+            val dest = File(dir, "update.apk")
+            if (dest.exists()) dest.delete()
+            // 多 CDN 候选：GitHub 直链 + jsdelivr/fastly 镜像，依次尝试
+            val urls = buildCandidateUrls(info.apkUrl)
+            var lastErr: Exception? = null
+            for (u in urls) {
                 try {
-                    // 跟随重定向到实际下载地址
-                    var resp = conn.responseCode
-                    if (resp in 301..308) {
-                        val loc = conn.getHeaderField("Location") ?: throw Exception("重定向缺失")
-                        conn.disconnect()
-                        val c2 = (URL(loc).openConnection() as HttpURLConnection).apply {
-                            connectTimeout = 15000
-                            readTimeout = 30000
-                            setRequestProperty("User-Agent", "PoetryApp-Updater")
-                        }
-                        return@thread downloadFrom(activity, c2, dest, progress, progressTxt)
-                    }
-                    if (resp != 200) {
-                        downloading = false
-                        mainHandler.post { Toast.makeText(activity, "下载失败：HTTP $resp", Toast.LENGTH_LONG).show() }
-                        return@thread
+                    mainHandler.post { progressTxt.text = "准备下载..." }
+                    val conn = (URL(u).openConnection() as HttpURLConnection).apply {
+                        connectTimeout = 10000
+                        readTimeout = 30000
+                        setRequestProperty("User-Agent", "PoetryApp-Updater")
+                        instanceFollowRedirects = true
                     }
                     downloadFrom(activity, conn, dest, progress, progressTxt)
+                    // downloadFrom 成功后已调起安装，直接返回
+                    if (dest.exists() && dest.length() > 0) return@thread
                 } catch (e: Exception) {
-                    downloading = false
-                    mainHandler.post {
-                        Toast.makeText(activity, "下载失败：" + (e.message ?: "未知错误"), Toast.LENGTH_LONG).show()
-                        progress.visibility = View.GONE
-                        progressTxt.visibility = View.GONE
-                    }
+                    lastErr = e
                 }
-            } catch (e: Exception) {
-                downloading = false
-                mainHandler.post {
-                    Toast.makeText(activity, "下载失败：" + (e.message ?: "未知错误"), Toast.LENGTH_LONG).show()
-                    progress.visibility = View.GONE
-                    progressText?.visibility = View.GONE
-                }
+            }
+            // 全部源失败
+            downloading = false
+            mainHandler.post {
+                Toast.makeText(activity, "下载失败：" + (lastErr?.message ?: "网络不可用"), Toast.LENGTH_LONG).show()
+                progress.visibility = View.GONE
+                progressTxt.visibility = View.GONE
             }
         }
     }
 
+    /** 根据原始 GitHub release 直链，生成多个 CDN 候选地址 */
+    private fun buildCandidateUrls(origin: String): List<String> {
+        val list = mutableListOf<String>()
+        // 尝试把 github.com/OWNER/REPO/releases/download/TAG/FILE 转成 jsdelivr fastly
+        val m = Regex("github.com/([^/]+)/([^/]+)/releases/download/([^/]+)/(.+)").find(origin)
+        if (m != null) {
+            val (owner, repo, tag, file) = m.destructured
+            val path = "releases/PoetryApp-$tag.apk"
+            // 我们的 apk 分发仓库固定 2714a/apk，路径 releases/xxx.apk
+            list.add("https://fastly.jsdelivr.net/gh/2714a/apk@main/$path")
+            list.add("https://testingcf.jsdelivr.net/gh/2714a/apk@main/$path")
+        }
+        list.add(origin)  // 最后兜底回原始直链
+        return list.distinct()
+    }
+
     /** 从已打开的连接写文件并实时更新进度，完成后调起安装 */
+    /** 从已打开的连接写文件并实时更新进度，失败抛异常(由 startDownload 尝试下一源)，成功后调起安装 */
     private fun downloadFrom(
         activity: Activity,
         conn: HttpURLConnection,
@@ -263,10 +263,10 @@ object UpdateManager {
         progressTxt: TextView
     ) {
         try {
-            if (conn.responseCode != 200) {
-                downloading = false
-                mainHandler.post { Toast.makeText(activity, "下载失败：HTTP " + conn.responseCode, Toast.LENGTH_LONG).show() }
-                return
+            val resp = conn.responseCode
+            if (resp != 200) {
+                conn.disconnect()
+                throw Exception("HTTP " + resp)
             }
             val total = conn.contentLength
             val buf = ByteArray(8192)
@@ -287,29 +287,26 @@ object UpdateManager {
                                 val totalMb = String.format("%.1f", total / 1048576.0)
                                 mainHandler.post {
                                     progress.progress = pct
-                                    progressTxt.text = "下载中 $pct%（$mb/$totalMb MB）"
+                                    progressTxt.text = "下载中 " + pct + "%（" + mb + "/" + totalMb + " MB）"
                                 }
                             }
                         }
                     }
                 }
             }
+            if (dest.length() <= 0) throw Exception("空文件")
+            // 下载成功，调起安装
             mainHandler.post {
                 progressTxt.text = "下载完成，正在打开安装..."
                 installApk(activity, dest)
             }
+        } finally {
             downloading = false
-        } catch (e: Exception) {
-            downloading = false
-            mainHandler.post {
-                Toast.makeText(activity, "下载失败：" + (e.message ?: "未知错误"), Toast.LENGTH_LONG).show()
-                progress.visibility = View.GONE
-                progressTxt.visibility = View.GONE
-            }
         }
     }
 
     /** 通过 FileProvider 调起系统安装器安装更新 APK */
+    /** 通过系统安装器安装更新 APK（ACTION_INSTALL_PACKAGE 兼容性更好） */
     private fun installApk(activity: Activity, apkFile: File) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
             !activity.packageManager.canRequestPackageInstalls()
@@ -328,9 +325,16 @@ object UpdateManager {
             return
         }
         val uri = FileProvider.getUriForFile(activity, activity.packageName + ".fileprovider", apkFile)
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(uri, "application/vnd.android.package-archive")
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
+                setData(uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        } else {
+            Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "application/vnd.android.package-archive")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
         }
         try {
             activity.startActivity(intent)
