@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -184,15 +185,26 @@ class MainActivity : AppCompatActivity() {
     /** 大类点击：已展开则收起，否则展开并默认选第一个子类 */
     private fun onRootClick(root: String) {
         if (root == currentRoot && rootExpanded) {
+            // 收起：上滑淡出动画，结束后隐藏
             rootExpanded = false
-            subScroll.visibility = View.GONE
             highlightRootChips(null)
+            val out = AnimationUtils.loadAnimation(this, R.anim.slide_up_out)
+            out.setAnimationListener(object : android.view.animation.Animation.AnimationListener {
+                override fun onAnimationStart(a: android.view.animation.Animation?) {}
+                override fun onAnimationRepeat(a: android.view.animation.Animation?) {}
+                override fun onAnimationEnd(a: android.view.animation.Animation?) {
+                    subScroll.visibility = View.GONE
+                }
+            })
+            subScroll.startAnimation(out)
         } else {
             currentRoot = root
             rootExpanded = true
             highlightRootChips(root)
             buildSubChips(root)
             subScroll.visibility = View.VISIBLE
+            // 展开：从上方滑入淡入动画
+            subScroll.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_down_in))
             val first = PoetryRepo.homeChildren(root).firstOrNull() ?: return
             currentCat = first
             searchInput.text.clear()
@@ -265,6 +277,10 @@ class MainActivity : AppCompatActivity() {
     private fun loadCategory(cat: String) {
         loadedCount = 0
         adapter.setData(emptyList())
+        // 触发列表错位入场动画（每次切换分类都重新播放）
+        val ctrl = AnimationUtils.loadLayoutAnimation(this, R.anim.list_stagger)
+        recycler.layoutAnimation = ctrl
+        recycler.scheduleLayoutAnimation()
         appendPage()
     }
 

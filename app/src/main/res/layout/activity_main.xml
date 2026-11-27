@@ -198,7 +198,9 @@
                     android:layout_height="match_parent"
                     android:paddingTop="2dp"
                     android:paddingBottom="16dp"
-                    android:clipToPadding="false" />
+                    android:clipToPadding="false"
+                    android:layoutAnimation="@anim/list_stagger"
+                    android:overScrollMode="never" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
             <TextView
