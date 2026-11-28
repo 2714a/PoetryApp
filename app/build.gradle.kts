@@ -10,8 +10,8 @@ android {
         applicationId = "com.poetry.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 13
-        versionName = "1.4.3"
+        versionCode = 14
+        versionName = "1.5.0"
     }
 
     signingConfigs {

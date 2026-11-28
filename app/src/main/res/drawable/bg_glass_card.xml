@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 玻璃拟态卡片：斜向半透明白高光 + 白描边 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="#80FFFFFF"
+        android:centerColor="#59FFFFFF"
+        android:endColor="#40FFFFFF"
+        android:angle="135"
+        android:type="linear" />
+    <corners android:radius="16dp" />
+    <stroke
+        android:width="1dp"
+        android:color="#99FFFFFF" />
+</shape>

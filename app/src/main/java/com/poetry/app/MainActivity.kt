@@ -161,22 +161,54 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** 生成首页大类标签（古诗词 / 趣味），点击展开或收起子目录 */
-    private fun buildCategoryChips() {
+    /** dp -> px */
+    private fun dp(v: Float): Float = v * resources.displayMetrics.density
+
+    /** 给 Chip 应用玻璃拟态样式：圆角渐变半透明底 + 白色高光描边 + 柔和投影 */
+    private fun applyGlassChip(chip: Chip, selected: Boolean) {
+        chip.isCheckable = true
+        chip.isCheckedIconVisible = false
+        chip.isClickable = true
+        chip.chipMinHeight = dp(40f) // 稍高的玻璃按钮
+        // 圆角玻璃背景（GradientDrawable 支持渐变+描边+圆角）
+        val r = dp(20f)
+        val gd = if (selected) {
+            android.graphics.drawable.GradientDrawable(
+                android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
+                intArrayOf(0xB3B23A2E.toInt(), 0x80B23A2E.toInt())) // 半透明朱砂高光
+        } else {
+            android.graphics.drawable.GradientDrawable(
+                android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
+                intArrayOf(0x8CFFFFFF.toInt(), 0x40FFFFFF.toInt())) // 半透明白高光
+        }
+        gd.cornerRadius = r
+        gd.setStroke(
+            dp(if (selected) 2f else 1f).toInt().coerceAtLeast(1),
+            if (selected) 0xE6C9A24B.toInt() else 0x99FFFFFF.toInt()) // 选中金描边 / 未选白描边
+        chip.background = gd
+        // 文字色
+        chip.setTextColor(getColor(if (selected) R.color.white else R.color.ink))
+        chip.chipStrokeWidth = 0f
+        chip.chipStrokeColor = android.content.res.ColorStateList.valueOf(
+            android.graphics.Color.TRANSPARENT) // 描边交给 background，关闭 Chip 自带
+        // 柔和投影（API 21+ elevation + outline）
+        chip.elevation = if (selected) 6f else 3f
+        chip.outlineProvider = android.view.ViewOutlineProvider.BACKGROUND
+        chip.stateListAnimator = null
+        // 内边距让玻璃感更通透
+        chip.chipStartPadding = dp(8f)
+        chip.chipEndPadding = dp(8f)
+        chip.textStartPadding = dp(6f)
+        chip.textEndPadding = dp(6f)
+    }
+
+        private fun buildCategoryChips() {
         catGroup.removeAllViews()
         for ((root, _) in PoetryRepo.HOME_ROOTS) {
             val chip = Chip(this)
             chip.text = root
-            chip.isCheckable = true
-            chip.isCheckedIconVisible = false
-            chip.isClickable = true
-            chip.chipBackgroundColor = android.content.res.ColorStateList.valueOf(getColor(R.color.white))
-            chip.setTextColor(getColor(R.color.ink_soft))
-            chip.chipStrokeColor = android.content.res.ColorStateList.valueOf(getColor(R.color.divider))
-            chip.chipStrokeWidth = 1f
-            if (root == currentRoot && rootExpanded) {
-                chip.setChipBackgroundColorResource(R.color.cinnabar)
-                chip.setTextColor(getColor(R.color.white))
-            }
+            val sel = root == currentRoot && rootExpanded
+            applyGlassChip(chip, sel)
             chip.setOnClickListener { onRootClick(root) }
             catGroup.addView(chip)
         }
@@ -215,37 +247,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** 高亮大类标签；selected=null 表示全部不高亮（收起状态） */
-    private fun highlightRootChips(selected: String?) {
+        private fun highlightRootChips(selected: String?) {
         for (i in 0 until catGroup.childCount) {
             val c = catGroup.getChildAt(i) as Chip
-            if (selected != null && c.text == selected) {
-                c.setChipBackgroundColorResource(R.color.cinnabar)
-                c.setTextColor(getColor(R.color.white))
-            } else {
-                c.setChipBackgroundColorResource(R.color.white)
-                c.setTextColor(getColor(R.color.ink_soft))
-            }
+            applyGlassChip(c, selected != null && c.text == selected)
         }
     }
 
     /** 生成子目录横滚条 */
-    private fun buildSubChips(root: String) {
+        private fun buildSubChips(root: String) {
         subGroup.removeAllViews()
         for (name in PoetryRepo.homeChildren(root)) {
             val chip = Chip(this)
             chip.text = name
-            chip.isCheckable = true
-            chip.isCheckedIconVisible = false
-            chip.isClickable = true
-            chip.chipBackgroundColor = android.content.res.ColorStateList.valueOf(
-                android.graphics.Color.parseColor("#F5EFE6"))
-            chip.setTextColor(getColor(R.color.ink))
-            chip.chipStrokeColor = android.content.res.ColorStateList.valueOf(getColor(R.color.divider))
-            chip.chipStrokeWidth = 1f
-            if (name == currentCat) {
-                chip.setChipBackgroundColorResource(R.color.cinnabar)
-                chip.setTextColor(getColor(R.color.white))
-            }
+            applyGlassChip(chip, name == currentCat)
             chip.setOnClickListener {
                 currentCat = name
                 highlightSubChips(name)
@@ -259,17 +274,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** 高亮子目录标签 */
-    private fun highlightSubChips(selected: String) {
+        private fun highlightSubChips(selected: String) {
         for (i in 0 until subGroup.childCount) {
             val c = subGroup.getChildAt(i) as Chip
-            if (c.text == selected) {
-                c.setChipBackgroundColorResource(R.color.cinnabar)
-                c.setTextColor(getColor(R.color.white))
-            } else {
-                c.chipBackgroundColor = android.content.res.ColorStateList.valueOf(
-                    android.graphics.Color.parseColor("#F5EFE6"))
-                c.setTextColor(getColor(R.color.ink))
-            }
+            applyGlassChip(c, c.text == selected)
         }
     }
 
